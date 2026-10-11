@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050806">
+<title>CYBERPUNK TOOLKIT</title>
+<style>
+:root{--green:#39ff88;--green2:#16c96b;--gold:#f6c85f;--text:#e9fff0;--muted:#8da99a;--line:#1b4930;--danger:#ff667a;--radius:16px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:#020403;color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;display:flex;justify-content:center}
+button,input,textarea,select{font:inherit}button{cursor:pointer}
+.app{position:relative;width:100%;max-width:480px;height:100%;display:flex;flex-direction:column;overflow:hidden;background:radial-gradient(ellipse at top,#10271a,#050806 55%,#020403);border-inline:1px solid #12301f}
+.appbar{display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px}
+.appbar h1{flex:1;margin:0;font-size:17px}
+.brandmini{color:var(--green);letter-spacing:1.5px;font-weight:800;line-height:1.1}.brandmini small{display:block;font-size:10px;color:var(--muted);letter-spacing:2px}
+.icobtn{flex:0 0 auto;width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--line);background:#0a150e;color:var(--green);border-radius:12px;font-size:18px}
+.icobtn.sm{width:32px;height:32px;font-size:15px}
+main{flex:1;overflow:auto;padding:6px 14px 20px}main>*{margin-bottom:12px}
+.bottomnav{display:flex;border-top:1px solid var(--line);background:#07100a;padding-bottom:env(safe-area-inset-bottom,0px)}
+.bottomnav button{flex:1;background:none;border:0;color:var(--muted);padding:8px 0 6px;font-size:11px;display:flex;flex-direction:column;align-items:center}
+.bottomnav button span{font-size:19px;line-height:1.2}.bottomnav button.active{color:var(--green)}
+.logo{width:46px;height:46px;border:1px solid var(--green);border-radius:14px;display:grid;place-items:center;color:var(--green);font-size:24px;text-shadow:0 0 14px #39ff8888;box-shadow:0 0 22px #39ff881c;flex:0 0 auto}
+.logo.big{width:84px;height:84px;font-size:44px;margin:18px auto 10px;border-radius:24px}
+.card{background:linear-gradient(145deg,#0b130e,#080d0a);border:1px solid #1a3e29;border-radius:var(--radius);padding:14px}
+.hero{display:flex;gap:14px;align-items:center;border-color:#24633d}.hero h2{margin:0 0 4px;font-size:21px;line-height:1.2}.hero h2 span{color:var(--green)}.hero p{margin:0;color:#b4cdbd;font-size:12px}
+.btn{border:1px solid var(--green2);background:var(--green);color:#041109;padding:12px 14px;border-radius:12px;font-weight:800;box-shadow:0 0 18px #39ff881c}
+.btn.secondary{background:#0a150e;color:var(--green);border-color:var(--line);box-shadow:none}
+.btn.danger{background:#241015;color:var(--danger);border-color:#74313b;box-shadow:none}
+.btn.wide{width:100%}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+input,textarea{width:100%;background:#050b07;border:1px solid #234731;border-radius:12px;color:var(--text);padding:12px;outline:none}
+textarea{resize:vertical;min-height:105px}input::placeholder,textarea::placeholder{color:#668271}
+input[type=range]{padding:0;accent-color:var(--green)}
+.field label,.output-label,.section-label{display:block;font-size:12px;color:#bdd7c5;margin-bottom:7px;font-weight:700}
+.section-label{font-size:11px;letter-spacing:1.5px;color:var(--muted);margin:8px 0 0}
+.gold{color:var(--gold)}.g{color:var(--green)}.muted{color:var(--muted);font-size:12px}.center{text-align:center}.hidden{display:none!important}
+.actions{display:flex;gap:10px}.actions.two>*{flex:1}
+.checks{display:flex;flex-direction:column;gap:10px;margin:14px 0}.check{display:flex;align-items:center;gap:8px;font-size:13px;color:#c5dace}.check input{width:auto;accent-color:var(--green)}
+.result{background:#030704;border:1px solid #1d4b2e;border-radius:12px;padding:12px;color:var(--green);font-family:ui-monospace,Consolas,monospace;min-height:48px}
+.copyrow{display:flex;align-items:center;gap:8px}.copyrow span{flex:1;overflow-wrap:anywhere;white-space:pre-wrap}
+.strength{font-size:12px;font-weight:700}.bar{height:7px;border-radius:9px;background:#122418;margin-top:6px;overflow:hidden}.bar i{display:block;height:100%;width:0;transition:.2s}
+.seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#050b07}.seg button{flex:1;padding:10px;background:none;border:0;color:var(--muted);font-weight:700}.seg button.on{background:#12301f;color:var(--green)}
+.tool-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tool-card{background:linear-gradient(145deg,#0b130e,#080d0a);border:1px solid #1a3e29;border-radius:var(--radius);padding:12px 6px;min-height:96px;color:var(--text);text-align:center}
+.tool-card:active{border-color:var(--green2)}.tool-card .bigico{font-size:24px;color:var(--green)}.tool-card h3{margin:6px 0 0;font-size:11.5px;line-height:1.25}
+.setrow,.note-item{display:flex;align-items:center;gap:12px;width:100%;text-align:left;color:var(--text);background:#07100a;border:1px solid #1d472d;border-radius:12px;padding:12px;margin:8px 0 0}
+.nico{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:#12301f;color:var(--green);flex:0 0 auto}
+.c0{color:var(--gold)}.c1{color:#5ef0b0}.c2{color:#c58bff}.c3{color:#5aa9ff}
+.nbody{flex:1;min-width:0;display:flex;flex-direction:column}.nbody small{color:var(--muted);font-size:11px}.nbody em{font-style:normal;color:#9db8a8;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.setrow.red{border-color:#74313b;color:var(--danger)}.setrow.red .nico{color:var(--danger);background:#241015}
+.brandrow{display:flex;gap:12px;align-items:center;margin-top:8px}
+.feat{list-style:none;margin:0;padding:0}.feat li{padding:6px 0;color:#c5dace}
+.qr-wrap{background:#fff;border-radius:12px;padding:12px;width:max-content;max-width:100%;margin:12px auto}.qr-wrap img,.qr-wrap canvas{display:block;max-width:100%;height:auto;image-rendering:pixelated}
+.notice{padding:10px 12px;border-radius:10px;background:#101c13;border:1px solid #2b4b32;color:#a8c7b2;font-size:12px}.notice.warn{border-color:#675127;background:#1d180c;color:#efd99d}
+.drawer{position:absolute;top:0;bottom:0;left:0;width:78%;z-index:40;background:#07100a;border-right:1px solid var(--line);padding:calc(16px + env(safe-area-inset-top,0px)) 12px 16px;transform:translateX(-102%);transition:transform .22s;overflow:auto}.drawer.open{transform:none}
+.scrim{position:absolute;inset:0;background:#000a;opacity:0;pointer-events:none;transition:.2s;z-index:39}.scrim.open{opacity:1;pointer-events:auto}
+.navbtn{display:flex;width:100%;align-items:center;gap:12px;background:none;border:1px solid transparent;color:#bdd7c5;padding:12px 10px;border-radius:10px;margin-bottom:3px;text-align:left}.navbtn .ico{width:24px;text-align:center;font-size:18px;color:var(--green)}.navbtn:active{background:#102419;border-color:#245638}
+.drawer hr{border:0;border-top:1px solid var(--line);margin:10px 0}
+.splash{position:absolute;inset:0;z-index:60;background:radial-gradient(ellipse at top,#143a24,#050806 65%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;transition:opacity .5s}.splash.gone{opacity:0;pointer-events:none}
+.splash h1{margin:6px 0 0;color:var(--green);letter-spacing:4px;font-size:30px;line-height:1.15;text-shadow:0 0 18px #39ff8899}.splash p{margin:0;color:var(--muted);font-size:12px;letter-spacing:2px}
+.modal{position:absolute;inset:0;z-index:80;background:#000b;display:none;align-items:center;justify-content:center;padding:24px}.modal.open{display:flex}.modal .card{width:100%;background:#0b130e}
+.toast{position:absolute;left:50%;bottom:80px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:var(--green);color:#031007;padding:10px 16px;border-radius:99px;font-weight:800;font-size:13px;transition:.2s;z-index:99;white-space:nowrap}.toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<div class="app">
+ <header class="appbar" id="appbar"></header>
+ <main id="main" aria-live="polite"></main>
+ <nav class="bottomnav" aria-label="Main">
+  <button data-root="home"><span>⌂</span>Home</button>
+  <button data-root="notes"><span>▤</span>Notes</button>
+  <button data-act="menu"><span>☰</span>Menu</button>
+  <button data-root="settings"><span>⚙</span>Settings</button>
+ </nav>
+ <div class="scrim" id="scrim" data-act="closedrawer"></div>
+ <aside class="drawer" id="drawer" aria-label="Menu">
+  <div class="brandrow" style="margin:0 0 14px"><div class="logo">⌘</div><div class="brandmini">CYBERPUNK<small>TOOLKIT</small></div></div>
+  <button class="navbtn" data-root="home"><span class="ico">⌂</span>Home</button>
+  <button class="navbtn" data-go="password"><span class="ico">⚿</span>Password Generator</button>
+  <button class="navbtn" data-go="codec"><span class="ico">&lt;/&gt;</span>Text Encoder/Decoder</button>
+  <button class="navbtn" data-go="hash"><span class="ico">#</span>SHA-256 Hash</button>
+  <button class="navbtn" data-go="qr"><span class="ico">▦</span>QR Code Generator</button>
+  <button class="navbtn" data-root="notes"><span class="ico">▤</span>Local Notes</button>
+  <hr>
+  <button class="navbtn" data-root="settings"><span class="ico">⚙</span>Settings</button>
+  <button class="navbtn" data-go="about"><span class="ico">ⓘ</span>About</button>
+ </aside>
+ <div class="splash" id="splash"><div class="logo big">⌘</div><h1>CYBERPUNK<br>TOOLKIT</h1><p>SECURE · ENCODE · GENERATE · OFFLINE</p><p style="margin-top:26px">Initializing...</p></div>
+ <div class="modal" id="modal"><div class="card"><p id="modalMsg" style="margin:0 0 14px"></p><div class="actions two"><button class="btn secondary" id="mNo">Cancel</button><button class="btn danger" id="mYes">Delete</button></div></div></div>
+ <div class="toast" id="toast" role="status"></div>
+</div>
+<input id="importFile" class="hidden" type="file" accept="application/json,.json">
+<script>
+"use strict";
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const main=$("#main");
+let currentView="home",stack=[],noteEditingId=null,toastTimer=null,codecType="b64";
+function toast(message){
+  const el=$("#toast"); el.textContent=message; el.classList.add("show");
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove("show"),2200);
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function secureIndex(max){
+ if(!Number.isSafeInteger(max)||max<1)throw new Error("Invalid random range");
+ if(!crypto||!crypto.getRandomValues)throw new Error("Secure random generation is not available in this browser context.");
+ const limit=Math.floor(4294967296/max)*max; const a=new Uint32Array(1); let n;
+ do{crypto.getRandomValues(a);n=a[0]}while(n>=limit);
+ return n%max;
+}
+const tools=[{id:"password",icon:"⚿",title:"Password Generator"},{id:"codec",icon:"&lt;/&gt;",title:"Text Encoder/Decoder"},{id:"hash",icon:"#",title:"SHA-256 Hash"},{id:"qr",icon:"▦",title:"QR Code Generator"},{id:"notes",icon:"▤",title:"Local Notes"}];
+const titles={password:"Password Generator",codec:"Text Encoder/Decoder",hash:"SHA-256 Hash Calculator",qr:"QR Code Generator",notes:"Local Notes",settings:"Settings",edit:"Edit Note",backup:"Backup Notes",about:"About"};
+const roots=["home","notes","settings"];
+const rbox=id=>`<div class="result copyrow"><span id="${id}">—</span><button class="icobtn sm" data-copy="${id}" aria-label="Copy">⧉</button></div>`;
+function show(view,arg){
+ currentView=view;closeDrawer();
+ $("#appbar").innerHTML=roots.includes(view)
+  ?`<button class="icobtn" data-act="menu" aria-label="Menu">☰</button><h1>${view==="home"?'<div class="brandmini">CYBERPUNK<small>TOOLKIT</small></div>':titles[view]}</h1><button class="icobtn" data-go="settings" aria-label="Settings">⚙</button>`
+  :`<button class="icobtn" data-act="back" aria-label="Back">←</button><h1>${titles[view]}</h1>`;
+ $$(".bottomnav [data-root]").forEach(b=>b.classList.toggle("active",b.dataset.root===view));
+ screens[view](arg);main.scrollTop=0;
+}
+function go(v,a){if(v!==currentView)stack.push(currentView);show(v,a);}
+function back(d="home"){show(stack.pop()||d);}
+function openDrawer(){$("#drawer").classList.add("open");$("#scrim").classList.add("open");}
+function closeDrawer(){$("#drawer").classList.remove("open");$("#scrim").classList.remove("open");}
+const screens={
+home(){
+ main.innerHTML=`<section class="card hero"><div class="logo">⌘</div><div><h2>Your Security<br><span>is in Your Hands</span></h2><p>Private tools that run on this device.</p></div></section>
+ <input id="toolSearch" type="search" placeholder="⌕  Search tools..." aria-label="Search tools">
+ <div class="tool-grid">${tools.map(t=>`<button class="tool-card" data-go="${t.id}"><div class="bigico">${t.icon}</div><h3>${t.title}</h3></button>`).join("")}</div>
+ <div class="notice"><b class="g">● Offline mode</b> — all tools process data locally. Notes stay in this browser; export a backup regularly.</div>`;
+ $("#toolSearch").addEventListener("input",e=>{const q=e.target.value.trim().toLowerCase();$$(".tool-card").forEach(c=>c.classList.toggle("hidden",!c.innerText.toLowerCase().includes(q)));});
+},
+password(){
+ main.innerHTML=`<div class="card"><div class="field"><label for="pwLength">Password Length <strong id="pwLenLabel" class="gold">16</strong></label><input id="pwLength" type="range" min="8" max="64" value="16"></div>
+ <div class="checks">${[["pwUpper","Uppercase Letters (A–Z)"],["pwLower","Lowercase Letters (a–z)"],["pwNumbers","Numbers (0–9)"],["pwSymbols","Symbols (!@#$…)"]].map(([i,t])=>`<label class="check"><input id="${i}" type="checkbox" checked> ${t}</label>`).join("")}</div>
+ <button class="btn wide" id="generatePw">Generate Password</button></div>
+ ${rbox("pwOutput")}
+ <div class="strength"><span id="pwStrength">Ready</span><div class="bar"><i id="pwBar"></i></div></div>
+ <div class="actions two"><button class="btn secondary" data-copy="pwOutput">Copy</button><button class="btn secondary" id="regenPw">Regenerate</button></div>
+ <div class="notice">Uses the browser's cryptographic random generator. Passwords never leave this device.</div>`;
+ $("#pwLength").addEventListener("input",()=>$("#pwLenLabel").textContent=$("#pwLength").value);
+ $("#generatePw").addEventListener("click",generatePassword);$("#regenPw").addEventListener("click",generatePassword);
+ generatePassword();
+},
+codec(){
+ main.innerHTML=`<div class="seg">${[["b64","Base64"],["url","URL"],["hex","Hex"]].map(([k,t])=>`<button data-type="${k}" class="${k===codecType?"on":""}">${t}</button>`).join("")}</div>
+ <div class="field"><label for="codecInput">Input Text</label><textarea id="codecInput" placeholder="Hello Cyberpunk"></textarea></div>
+ <div class="actions two"><button class="btn" id="encBtn">Encode</button><button class="btn secondary" id="decBtn">Decode</button></div>
+ <div class="output-label">Result</div>${rbox("codecOutput")}
+ <div class="actions two"><button class="btn danger" id="clearCodec">Clear</button><button class="btn secondary" id="useCodec">Use as input</button></div>
+ <div class="notice">Encoding is not encryption. Base64 and hex do not protect secrets.</div>`;
+ $$("[data-type]").forEach(b=>b.addEventListener("click",()=>{codecType=b.dataset.type;$$("[data-type]").forEach(x=>x.classList.toggle("on",x===b));}));
+ $("#encBtn").addEventListener("click",()=>runCodec(true));$("#decBtn").addEventListener("click",()=>runCodec(false));
+ $("#clearCodec").addEventListener("click",()=>{$("#codecInput").value="";$("#codecOutput").textContent="—";});
+ $("#useCodec").addEventListener("click",()=>{const o=$("#codecOutput").textContent;if(o==="—")return toast("Nothing to move yet.");$("#codecInput").value=o;toast("Output moved to input.");});
+},
+hash(){
+ main.innerHTML=`<div class="field"><label for="hashInput">Input Text</label><textarea id="hashInput" placeholder="Enter text to hash..."></textarea></div>
+ <button class="btn wide" id="runHash">Calculate SHA-256</button>
+ <div class="output-label">Hash Result</div>${rbox("hashOutput")}
+ <div class="actions two"><button class="btn danger" id="clearHash">Clear</button><button class="btn secondary" data-copy="hashOutput">Copy</button></div>
+ <div class="notice warn">Hashing is one-way: it does not encrypt text or recover passwords.</div>`;
+ $("#runHash").addEventListener("click",runHash);
+ $("#clearHash").addEventListener("click",()=>{$("#hashInput").value="";$("#hashOutput").textContent="—";});
+},
+qr(){
+ main.innerHTML=`<div class="field"><label for="qrInput">Enter text or URL <span class="muted">(max 17 bytes)</span></label><textarea id="qrInput" style="min-height:78px" maxlength="17" placeholder="Hello world"></textarea><div class="muted" id="qrCount">0 / 17 UTF-8 bytes</div></div>
+ <button class="btn wide" id="makeQR">Generate QR Code</button><div id="qrOutput" aria-live="polite"></div>
+ <div class="actions two"><a class="btn secondary" id="downloadQR" download="cyberpunk-qr.png" href="#" style="text-align:center;text-decoration:none">⬇ Download</a><button class="btn secondary" id="shareQR">Share</button></div>
+ <div class="notice">Supports QR Version 1-L only (up to 17 UTF-8 bytes). Always scan a QR before sharing it.</div>`;
+ const input=$("#qrInput");input.addEventListener("input",()=>{$("#qrCount").textContent=`${new TextEncoder().encode(input.value).length} / 17 UTF-8 bytes`;});
+ $("#makeQR").addEventListener("click",makeQR);$("#downloadQR").addEventListener("click",downloadQR);$("#shareQR").addEventListener("click",shareQR);
+},
+notes(){
+ main.innerHTML=`<input id="noteSearch" type="search" placeholder="⌕  Search Notes..." aria-label="Search notes"><button class="btn wide" data-go="edit" data-arg="">＋ Add Note</button><div id="notesList"></div>
+ <div class="notice warn">Notes are not encrypted. Anyone with access to this browser profile can read them. Export a backup from Settings.</div>`;
+ const draw=()=>{const q=$("#noteSearch").value.trim().toLowerCase();const list=getNotes().slice().reverse().filter(n=>(n.title+" "+n.body).toLowerCase().includes(q));
+  $("#notesList").innerHTML=list.length?list.map((n,i)=>`<button class="note-item" data-go="edit" data-arg="${esc(n.id)}"><span class="nico c${i%4}">▤</span><span class="nbody"><b>${esc(n.title||(n.body||"").split("\n")[0].slice(0,40)||"Untitled note")}</b><small>${new Date(n.updatedAt||n.createdAt||Date.now()).toLocaleDateString()}</small><em>${esc((n.body||"").slice(0,70))}</em></span></button>`).join(""):'<p class="muted center">No notes found.</p>';};
+ $("#noteSearch").addEventListener("input",draw);draw();
+},
+edit(id){
+ const n=id?getNotes().find(n=>n.id===id):null;noteEditingId=n?n.id:null;
+ main.innerHTML=`<div class="field"><label for="noteTitle">Title</label><input id="noteTitle" maxlength="100" placeholder="Note title"></div>
+ <div class="field"><label for="noteBody">Content</label><textarea id="noteBody" style="min-height:220px" placeholder="Write your note..."></textarea></div>
+ <button class="btn wide" id="saveNote">Save</button>${n?'<button class="btn danger wide" id="delNote">Delete</button>':""}`;
+ if(n){$("#noteTitle").value=n.title||"";$("#noteBody").value=n.body||"";}
+ $("#saveNote").addEventListener("click",saveNote);const d=$("#delNote");if(d)d.addEventListener("click",()=>deleteNote(n.id));
+},
+settings(){
+ const row=(ico,t,s,attr,cls="")=>`<button class="setrow ${cls}" ${attr}><span class="nico">${ico}</span><span class="nbody"><b>${t}</b><small>${s}</small></span><span>›</span></button>`;
+ main.innerHTML=`<div class="section-label">APP INFORMATION</div><div class="card brandrow"><div class="logo">⌘</div><div><b>Cyberpunk Toolkit</b><br><span class="muted">Version 1.0.0</span></div></div>
+ ${row("▤","Backup Notes","Export your notes as a JSON file",'data-go="backup"')}${row("⇩","Import Notes","Restore from a file or pasted text",'data-go="backup"')}
+ <div class="section-label">OTHER ACTIONS</div>${row("🗑","Clear All Notes","Permanently delete every saved note",'data-act="clearall"',"red")}
+ <div class="section-label">APPEARANCE</div>${row("◐","Theme","Cyberpunk Dark",'data-act="theme"')}${row("ⓘ","About","Features and version",'data-go="about"')}`;
+},
+backup(){
+ main.innerHTML=`<div class="card center"><div class="logo big">⇩</div><h2 style="margin:0">Create Backup</h2><p class="muted">Save your notes as a .JSON file on your device.</p><a class="btn wide" id="bkExport" download="cyberpunk-notes-backup.json" href="#" style="display:block;text-align:center;text-decoration:none">Export Backup File</a></div>
+ <div class="card"><b>Backup as text</b><p class="muted">If file download is blocked on your device, copy this text and keep it somewhere safe.</p><textarea id="bkText" readonly style="min-height:90px"></textarea><button class="btn secondary wide" id="bkCopy" style="margin-top:10px">Copy backup text</button></div>
+ <div class="card"><b>Restore Backup</b><p class="muted">Import a backup file, or paste backup text below.</p><button class="btn secondary wide" data-act="import">Choose backup file</button><textarea id="bkPaste" style="min-height:90px;margin-top:10px" placeholder="Paste backup text here"></textarea><button class="btn wide" id="bkRestore" style="margin-top:10px">Restore from text</button></div>`;
+ const json=JSON.stringify(getNotes(),null,2);$("#bkText").value=json;$("#bkExport").href="data:application/json;charset=utf-8,"+encodeURIComponent(json);
+ $("#bkText").addEventListener("focus",e=>e.target.select());
+ $("#bkCopy").addEventListener("click",()=>{const t=$("#bkText");t.focus();t.select();copyText(t.value);});
+ $("#bkRestore").addEventListener("click",()=>{if(importFromText($("#bkPaste").value.trim()))$("#bkPaste").value="";});
+},
+about(){
+ main.innerHTML=`<div class="center"><div class="logo big">⌘</div><h2 class="g" style="margin:0;letter-spacing:2px">CYBERPUNK TOOLKIT</h2><p class="muted">Offline Security &amp; Utility App</p></div>
+ <div class="card"><ul class="feat">${["Password Generator","Text Encoder/Decoder","SHA-256 Hash Calculator","QR Code Generator","Local Notes"].map(x=>`<li><span class="g">✔</span> ${x}</li>`).join("")}</ul></div>
+ <p class="center muted">Built with ♥ for a safer you.<br>Version 1.0.0</p>`;
+}};
+function generatePassword(){
+ const sets=[];
+ [["pwUpper","ABCDEFGHIJKLMNOPQRSTUVWXYZ"],["pwLower","abcdefghijklmnopqrstuvwxyz"],["pwNumbers","0123456789"],["pwSymbols","!@#$%^&*()-_=+[]{};:,.?"]].forEach(([id,s])=>{if($("#"+id).checked)sets.push(s);});
+ if(!sets.length){toast("Choose at least one character set.");return;}
+ const length=Number($("#pwLength").value),all=sets.join(""),chars=sets.map(s=>s[secureIndex(s.length)]);
+ while(chars.length<length)chars.push(all[secureIndex(all.length)]);
+ for(let i=chars.length-1;i>0;i--){const j=secureIndex(i+1);[chars[i],chars[j]]=[chars[j],chars[i]];}
+ $("#pwOutput").textContent=chars.join("");
+ const bits=length*Math.log2(all.length),lv=bits<50?["Weak","#ff667a"]:bits<70?["Fair","#f6c85f"]:["Strong","#39ff88"];
+ const st=$("#pwStrength");st.textContent=lv[0];st.style.color=lv[1];const bar=$("#pwBar");bar.style.width=Math.min(100,bits/1.3)+"%";bar.style.background=lv[1];
+}
+function runCodec(enc){
+ const s=$("#codecInput").value,t=codecType;let out;
+ try{
+  if(t==="b64"){
+   if(enc){const bytes=new TextEncoder().encode(s);let b="";bytes.forEach(x=>b+=String.fromCharCode(x));out=btoa(b);}
+   else out=new TextDecoder("utf-8",{fatal:true}).decode(Uint8Array.from(atob(s.trim()),c=>c.charCodeAt(0)));
+  }else if(t==="url")out=enc?encodeURIComponent(s):decodeURIComponent(s);
+  else if(enc)out=Array.from(new TextEncoder().encode(s),b=>b.toString(16).padStart(2,"0")).join(" ");
+  else{const clean=s.replace(/[\s,:-]/g,"");if(clean.length%2||!/^[0-9a-f]*$/i.test(clean))throw new Error("Enter valid hexadecimal pairs.");out=new TextDecoder("utf-8",{fatal:true}).decode(new Uint8Array(clean.match(/.{2}/g)?.map(h=>parseInt(h,16))||[]));}
+  $("#codecOutput").textContent=out||"—";
+ }catch(e){const bad=e instanceof URIError||e instanceof TypeError||e.name==="InvalidCharacterError";$("#codecOutput").textContent="Error: "+(bad?`Input is not valid ${t==="b64"?"Base64":t==="url"?"URL-encoded":"hex"} text. Use Encode for normal text.`:(e.message||"Unable to convert input."));}
+}
+function sha256js(m){
+ const P=[];for(let n=2;P.length<64;n++)if(P.every(p=>n%p))P.push(n);
+ const f=x=>((x-Math.floor(x))*4294967296)|0,K=P.map(p=>f(Math.cbrt(p))),H=P.slice(0,8).map(p=>f(Math.sqrt(p)));
+ const l=m.length,u=new Uint8Array(((l+9+63)>>6)<<6);u.set(m);u[l]=128;
+ const dv=new DataView(u.buffer);dv.setUint32(u.length-4,(l*8)>>>0);dv.setUint32(u.length-8,Math.floor(l/536870912));
+ const rr=(x,n)=>(x>>>n)|(x<<(32-n));
+ for(let o=0;o<u.length;o+=64){
+  const W=new Int32Array(64);for(let i=0;i<16;i++)W[i]=dv.getUint32(o+i*4);
+  for(let i=16;i<64;i++){const a=W[i-15],c=W[i-2];W[i]=(W[i-16]+(rr(a,7)^rr(a,18)^(a>>>3))+W[i-7]+(rr(c,17)^rr(c,19)^(c>>>10)))|0;}
+  let [a,b,c,d,e,f2,g,h]=H;
+  for(let i=0;i<64;i++){const t1=(h+(rr(e,6)^rr(e,11)^rr(e,25))+((e&f2)^(~e&g))+K[i]+W[i])|0,t2=((rr(a,2)^rr(a,13)^rr(a,22))+((a&b)^(a&c)^(b&c)))|0;h=g;g=f2;f2=e;e=(d+t1)|0;d=c;c=b;b=a;a=(t1+t2)|0;}
+  [a,b,c,d,e,f2,g,h].forEach((v,i)=>H[i]=(H[i]+v)|0);
+ }
+ return H.map(x=>(x>>>0).toString(16).padStart(8,"0")).join("");
+}
+async function runHash(){
+ const out=$("#hashOutput"),bytes=new TextEncoder().encode($("#hashInput").value);
+ try{
+  if(globalThis.crypto&&crypto.subtle){const d=await crypto.subtle.digest("SHA-256",bytes);out.textContent=Array.from(new Uint8Array(d),b=>b.toString(16).padStart(2,"0")).join("");}
+  else out.textContent=sha256js(bytes);
+ }catch(e){out.textContent=sha256js(bytes);}
+}
+let lastQRCanvas=null;
+function makeQR(){
+ const text=$("#qrInput").value, bytes=Array.from(new TextEncoder().encode(text));
+ if(!bytes.length){toast("Enter text first.");return;}
+ if(bytes.length>17){toast("Version 1-L supports up to 17 UTF-8 bytes.");return;}
+ try{
+  const matrix=qrV1L(bytes), scale=8, quiet=4, size=(21+quiet*2)*scale;
+  const canvas=document.createElement("canvas");canvas.width=size;canvas.height=size;
+  const ctx=canvas.getContext("2d");ctx.fillStyle="#fff";ctx.fillRect(0,0,size,size);ctx.fillStyle="#000";
+  for(let y=0;y<21;y++)for(let x=0;x<21;x++)if(matrix[y][x])ctx.fillRect((x+quiet)*scale,(y+quiet)*scale,scale,scale);
+  lastQRCanvas=canvas;
+  $("#qrOutput").innerHTML='<div class="qr-wrap" id="qrWrap"></div><p class="muted" style="text-align:center">Scan to verify the encoded content.</p>';
+  const img=new Image();img.src=canvas.toDataURL("image/png");img.alt="QR code";$("#qrWrap").appendChild(img);
+ }catch(e){toast("QR error: "+e.message);}
+}
+function qrV1L(bytes){
+ const N=21, m=Array.from({length:N},()=>Array(N).fill(null));
+ function set(x,y,v){if(x>=0&&x<N&&y>=0&&y<N)m[y][x]=!!v;}
+ function finder(x0,y0){
+  for(let y=-1;y<=7;y++)for(let x=-1;x<=7;x++){
+   const xx=x0+x,yy=y0+y;if(xx<0||yy<0||xx>=N||yy>=N)continue;
+   const inside=x>=0&&x<=6&&y>=0&&y<=6;
+   const black=inside&&(x===0||x===6||y===0||y===6||(x>=2&&x<=4&&y>=2&&y<=4));
+   set(xx,yy,black);
+  }
+ }
+ finder(0,0);finder(N-7,0);finder(0,N-7);
+ for(let i=8;i<N-8;i++){set(i,6,i%2===0);set(6,i,i%2===0);}
+ // Fixed dark module.
+ set(8,N-8,true);
+ // Reserve format information locations.
+ for(let i=0;i<=5;i++)set(8,i,false);
+ set(8,7,false);set(8,8,false);set(7,8,false);
+ for(let i=9;i<15;i++)set(14-i,8,false);
+ for(let i=0;i<8;i++)set(N-1-i,8,false);
+ for(let i=8;i<15;i++)set(8,N-15+i,false);
+ // Byte mode + 8-bit byte count + payload.
+ let bits=[];
+ function put(v,n){for(let i=n-1;i>=0;i--)bits.push((v>>>i)&1);}
+ put(4,4);put(bytes.length,8);bytes.forEach(b=>put(b,8));
+ const capacity=19*8;for(let i=0;i<Math.min(4,capacity-bits.length);i++)bits.push(0);
+ while(bits.length%8)bits.push(0);
+ let data=[];for(let i=0;i<bits.length;i+=8){let v=0;for(let j=0;j<8;j++)v=(v<<1)|(bits[i+j]||0);data.push(v);}
+ let pad=0;while(data.length<19){data.push(pad++%2===0?0xEC:0x11);}
+ const ecc=rsRemainder(data,[87,229,146,149,238,102,21]);
+ const all=data.concat(ecc), stream=[];all.forEach(v=>putInto(stream,v,8));
+ // Place data bits in two-column zigzag, right to left, skipping timing column.
+ let bit=0, upward=true;
+ for(let right=N-1;right>=1;right-=2){
+  if(right===6)right=5;
+  for(let vert=0;vert<N;vert++){
+   const y=upward?N-1-vert:vert;
+   for(let dx=0;dx<2;dx++){
+    const x=right-dx;if(m[y][x]!==null)continue;
+    let v=bit<stream.length?stream[bit++]:0;
+    if((x+y)%2===0)v^=1; // mask 0
+    m[y][x]=!!v;
+   }
+  }
+  upward=!upward;
+ }
+ // Format info: EC level L (01), mask 000 => data 01000; BCH remainder and XOR mask.
+ const format=formatBits(0b01000);
+ const a=[[8,0],[8,1],[8,2],[8,3],[8,4],[8,5],[8,7],[8,8],[7,8],[5,8],[4,8],[3,8],[2,8],[1,8],[0,8]];
+ for(let i=0;i<15;i++)set(a[i][0],a[i][1],(format>>i)&1);
+ const b=[];for(let i=0;i<8;i++)b.push([N-1-i,8]);for(let i=8;i<15;i++)b.push([8,N-15+i]);
+ for(let i=0;i<15;i++)set(b[i][0],b[i][1],(format>>i)&1);
+ set(8,N-8,true);
+ return m.map(row=>row.map(Boolean));
+}
+function putInto(arr,v,n){for(let i=n-1;i>=0;i--)arr.push((v>>>i)&1);}
+function rsRemainder(data,generator){
+ const degree=generator.length, result=Array(degree).fill(0);
+ for(const byte of data){
+  const factor=byte^result[0];result.shift();result.push(0);
+  for(let i=0;i<degree;i++)result[i]^=gfMul(generator[i],factor);
+ }
+ return result;
+}
+function gfMul(x,y){
+ let z=0;
+ for(let i=7;i>=0;i--){z=(z<<1)^((z&0x80)?0x11D:0);if((y>>>i)&1)z^=x;}
+ return z&255;
+}
+function formatBits(data){
+ let rem=data<<10;const poly=0x537;
+ for(let i=14;i>=10;i--)if((rem>>>i)&1)rem^=poly<<(i-10);
+ return ((data<<10)|rem)^0x5412;
+}
+function downloadQR(e){
+ if(!lastQRCanvas){e.preventDefault();toast("Generate a QR code first.");return;}
+ e.currentTarget.href=lastQRCanvas.toDataURL("image/png");
+ toast("Saving… if nothing happens, take a screenshot of the QR.");
+}
+function shareQR(){
+ if(!lastQRCanvas){toast("Generate a QR code first.");return;}
+ lastQRCanvas.toBlob(b=>{const f=new File([b],"cyberpunk-qr.png",{type:"image/png"});
+  if(navigator.canShare&&navigator.canShare({files:[f]}))navigator.share({files:[f]}).catch(()=>{});else toast("Sharing is blocked here. Take a screenshot of the QR.");});
+}
+function getNotes(){try{const x=JSON.parse(localStorage.getItem("cyberpunk_toolkit_notes")||"[]");return Array.isArray(x)?x:[];}catch{return [];}}
+function saveNotes(n){localStorage.setItem("cyberpunk_toolkit_notes",JSON.stringify(n));}
+function saveNote(){
+ const title=$("#noteTitle").value.trim(),body=$("#noteBody").value.trim();
+ if(!title&&!body){toast("Enter a title or note content.");return;}
+ const notes=getNotes();
+ if(noteEditingId){const n=notes.find(n=>n.id===noteEditingId);if(n){n.title=title;n.body=body;n.updatedAt=new Date().toISOString();}}
+ else notes.push({id:(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random().toString(16).slice(2)),title,body,createdAt:new Date().toISOString()});
+ try{saveNotes(notes);toast("Note saved on this device.");back("notes");}catch(e){toast("Could not save note. Storage may be full.");}
+}
+function askConfirm(msg,yes){$("#modalMsg").textContent=msg;$("#modal").classList.add("open");$("#mNo").onclick=()=>$("#modal").classList.remove("open");$("#mYes").onclick=()=>{$("#modal").classList.remove("open");yes();};}
+function deleteNote(id){askConfirm("Delete this note? This cannot be undone.",()=>{try{saveNotes(getNotes().filter(n=>n.id!==id));toast("Note deleted.");back("notes");}catch{toast("Could not delete note.");}});}
+function exportNotes(){
+ const blob=new Blob([JSON.stringify(getNotes(),null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="cyberpunk-notes-backup.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function importFromText(text){
+ try{
+  const parsed=JSON.parse(text);if(!Array.isArray(parsed)||parsed.some(n=>!n||typeof n.title!=="string"||typeof n.body!=="string"))throw new Error("Invalid backup format.");
+  const existing=getNotes(),seen=new Set(existing.map(n=>n.id));
+  const incoming=parsed.map((n,i)=>({id:typeof n.id==="string"&&!seen.has(n.id)?n.id:"import-"+Date.now()+"-"+i,title:n.title.slice(0,100),body:n.body,createdAt:n.createdAt||new Date().toISOString()}));
+  saveNotes(existing.concat(incoming));toast(`Imported ${incoming.length} note(s).`);return true;
+ }catch(e){toast(e instanceof SyntaxError?"Paste the full backup text (starts with [ and ends with ]).":(e.message||"Could not import backup."));return false;}
+}
+function importNotes(event){const file=event.target.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{importFromText(r.result);event.target.value="";};r.readAsText(file);}
+async function copyText(text,srcId){
+ if(!text||text==="—"||text.startsWith("Error")){toast("Nothing to copy yet.");return;}
+ try{await navigator.clipboard.writeText(text);toast("Copied to clipboard.");return;}catch{}
+ try{const ta=document.createElement("textarea");ta.value=text;ta.setAttribute("readonly","");ta.style.cssText="position:fixed;top:0;left:0;opacity:0;font-size:16px";document.body.appendChild(ta);ta.focus();ta.select();ta.setSelectionRange(0,text.length);const ok=document.execCommand("copy");ta.remove();if(ok){toast("Copied to clipboard.");return;}}catch{}
+ const el=srcId&&$("#"+srcId);if(el&&el.tagName!=="TEXTAREA"){const r=document.createRange();r.selectNodeContents(el);const sel=getSelection();sel.removeAllRanges();sel.addRange(r);}
+ toast("Auto-copy is blocked here. Text selected: long-press to copy.");
+}
+document.addEventListener("click",e=>{
+ const sp=e.target.closest(".copyrow span");if(sp){const r=document.createRange();r.selectNodeContents(sp);const g=getSelection();g.removeAllRanges();g.addRange(r);toast("Selected. Use your phone's Copy option.");return;}
+ const t=e.target.closest("[data-go],[data-root],[data-act],[data-copy]");if(!t)return;
+ const d=t.dataset;
+ if(d.copy)copyText($("#"+d.copy).textContent,d.copy);
+ else if(d.go)go(d.go,d.arg||null);
+ else if(d.root){stack=[];show(d.root);}
+ else if(d.act==="menu")openDrawer();
+ else if(d.act==="closedrawer")closeDrawer();
+ else if(d.act==="back")back();
+ else if(d.act==="export")exportNotes();
+ else if(d.act==="import")$("#importFile").click();
+ else if(d.act==="theme")toast("Cyberpunk Dark is the only theme for now.");
+ else if(d.act==="clearall"){askConfirm("Delete ALL notes? This cannot be undone.",()=>{try{localStorage.removeItem("cyberpunk_toolkit_notes");toast("All notes deleted.");}catch{toast("Could not clear notes.");}});}
+});
+$("#importFile").addEventListener("change",importNotes);
+show("home");
+setTimeout(()=>$("#splash").classList.add("gone"),1500);
+</script>
+</body>
+</html>
